@@ -47,6 +47,10 @@ export class Ok<T, E> {
     return ok(newInner)
   }
 
+  async asyncAndThen<U>(f: (t: T) => Promise<Result<U, E>>): Promise<Result<U, E>> {
+    return await f(this.value)
+  }
+
   // talk about match can be used to unwrap values in a typesafe way
   match = <U, A>(
     ok: (t: T) => U,
@@ -93,6 +97,10 @@ export class Err<T, E> {
   }
 
   async asyncMap<U>(_f: (t: T) => Promise<U>): Promise<Result<U, E>> {
+    return err(this.error)
+  }
+
+  async asyncAndThen<U>(_f: (t: T) => Promise<Result<U, E>>): Promise<Result<U, E>> {
     return err(this.error)
   }
 
