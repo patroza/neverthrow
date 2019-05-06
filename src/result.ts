@@ -59,6 +59,13 @@ export class Ok<T, E> {
     return ok(this.value)
   }
 
+  async asyncMatch<U, A>(
+    ok: (t: T) => Promise<U>,
+    _err: (e: E) => Promise<A>
+  ): Promise<U> {
+    return await ok(this.value)
+  }
+
   // talk about how unwrapping defeats the purpose of Results
   _unsafeUnwrap(): T {
     return this.value
@@ -108,6 +115,13 @@ export class Err<T, E> {
     _ok: (t: T) => U,
     err: (e: E) => A
   ): A => {
+    return err(this.error)
+  }
+
+  async asyncMatch<U, A>(
+    _ok: (t: T) => Promise<U>,
+    err: (e: E) => Promise<A>
+  ): Promise<A> {
     return err(this.error)
   }
 
