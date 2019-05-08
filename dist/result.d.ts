@@ -1,9 +1,7 @@
 export declare type Result<T, E> = Ok<T, E> | Err<T, E>;
 export declare const ok: <T, E>(value: T) => Ok<T, E>;
 export declare const err: <T, E>(err: E) => Err<T, E>;
-/** @internal */
-export declare function pipeFromArray<T, R>(fns: Array<UnaryFunction<T, R>>, transform: (prev: any, fn: any) => any): UnaryFunction<T, R>;
-export declare class Ok<T, E> implements IPipe<T, E> {
+export declare class Ok<T, E> {
     private value;
     constructor(value: T);
     isOk(): this is Ok<T, E>;
@@ -33,7 +31,7 @@ interface UnaryFunction<T, R> {
 }
 interface OperatorFunction<T, R> extends UnaryFunction<T, R> {
 }
-export declare class Err<T, E> implements IPipe<T, E> {
+export declare class Err<T, E> {
     private error;
     constructor(error: E);
     isOk(): this is Ok<T, E>;
@@ -57,17 +55,5 @@ export declare class Err<T, E> implements IPipe<T, E> {
     asyncMatch<U, A>(_ok: (t: T) => Promise<U>, err: (e: E) => Promise<A>): Promise<A>;
     _unsafeUnwrap(): T;
     _unsafeUnwrapErr(): E;
-}
-interface IPipe<T, E> {
-    pipe<A>(op1: OperatorFunction<Result<T, E>, A>): A;
-    pipe<A, B>(op1: OperatorFunction<Result<T, E>, A>, op2: OperatorFunction<A, B>): B;
-    pipe<A, B, C>(op1: OperatorFunction<Result<T, E>, A>, op2: OperatorFunction<A, B>, op3: OperatorFunction<B, C>): C;
-    pipe<A, B, C, D>(op1: OperatorFunction<Result<T, E>, A>, op2: OperatorFunction<A, B>, op3: OperatorFunction<B, C>, op4: OperatorFunction<C, D>): D;
-    pipe<A, B, C, D, E2>(op1: OperatorFunction<Result<T, E>, A>, op2: OperatorFunction<A, B>, op3: OperatorFunction<B, C>, op4: OperatorFunction<C, D>, op5: OperatorFunction<D, E2>): E2;
-    pipe<A, B, C, D, E2, F>(op1: OperatorFunction<Result<T, E>, A>, op2: OperatorFunction<A, B>, op3: OperatorFunction<B, C>, op4: OperatorFunction<C, D>, op5: OperatorFunction<D, E2>, op6: OperatorFunction<E2, F>): F;
-    pipe<A, B, C, D, E2, F, G>(op1: OperatorFunction<Result<T, E>, A>, op2: OperatorFunction<A, B>, op3: OperatorFunction<B, C>, op4: OperatorFunction<C, D>, op5: OperatorFunction<D, E2>, op6: OperatorFunction<E2, F>, op7: OperatorFunction<F, G>): G;
-    pipe<A, B, C, D, E2, F, G, H>(op1: OperatorFunction<Result<T, E>, A>, op2: OperatorFunction<A, B>, op3: OperatorFunction<B, C>, op4: OperatorFunction<C, D>, op5: OperatorFunction<D, E2>, op6: OperatorFunction<E2, F>, op7: OperatorFunction<F, G>, op8: OperatorFunction<G, H>): H;
-    pipe<A, B, C, D, E2, F, G, H, I>(op1: OperatorFunction<Result<T, E>, A>, op2: OperatorFunction<A, B>, op3: OperatorFunction<B, C>, op4: OperatorFunction<C, D>, op5: OperatorFunction<D, E2>, op6: OperatorFunction<E2, F>, op7: OperatorFunction<F, G>, op8: OperatorFunction<G, H>, op9: OperatorFunction<H, I>): I;
-    pipe<A, B, C, D, E2, F, G, H, I>(op1: OperatorFunction<Result<T, E>, A>, op2: OperatorFunction<A, B>, op3: OperatorFunction<B, C>, op4: OperatorFunction<C, D>, op5: OperatorFunction<D, E2>, op6: OperatorFunction<E2, F>, op7: OperatorFunction<F, G>, op8: OperatorFunction<G, H>, op9: OperatorFunction<H, I>, ...operations: OperatorFunction<any, any>[]): {};
 }
 export {};

@@ -65,20 +65,18 @@ function pipe() {
     return pipeFromArray(fns, function (prev, fn) { return fn(prev); });
 }
 var noop = function () { };
-/** @internal */
 function pipeFromArray(fns, transform) {
     if (!fns) {
         return noop;
     }
     // if (fns.length === 1) {
-    //   return fns[0];
+    //   return (input) => transform(input, fns[0]);
     // }
     return function piped(input) {
         // .then for Promise
         return fns.reduce(function (prev, fn) { return transform(prev, fn); }, input);
     };
 }
-exports.pipeFromArray = pipeFromArray;
 var Ok = /** @class */ (function () {
     function Ok(value) {
         var _this = this;
