@@ -10,6 +10,26 @@ export const ok = <T, E>(value: T): Ok<T, E> => new Ok(value)
 
 export const err = <T, E>(err: E): Err<T, E> => new Err(err)
 
+function pipe(...fns: Array<UnaryFunction<any, any>>): UnaryFunction<any, any> {
+  return pipeFromArray(fns, (prev, fn) => fn(prev));
+}
+
+const noop = () => {}
+
+function pipeFromArray<T, R>(fns: Array<UnaryFunction<T, R>>, transform: (prev: any, fn: any) => any): UnaryFunction<T, R> {
+  if (!fns) {
+    return noop as UnaryFunction<any, any>;
+  }
+
+  // if (fns.length === 1) {
+  //   return (input) => transform(input, fns[0]);
+  // }
+
+  return function piped(input: T): R {
+    // .then for Promise
+    return fns.reduce((prev: any, fn: UnaryFunction<T, R>) => transform(prev, fn), input as any);
+  };
+}
 
 export class Ok<T, E> {
   private value: T
@@ -24,6 +44,20 @@ export class Ok<T, E> {
 
   isErr(): this is Err<T, E> {
     return !this.isOk()
+  }
+
+  pipe<A>(op1: OperatorFunction<Result<T, E>, A>): A;
+  pipe<A, B>(op1: OperatorFunction<Result<T, E>, A>, op2: OperatorFunction<A, B>): B;
+  pipe<A, B, C>(op1: OperatorFunction<Result<T, E>, A>, op2: OperatorFunction<A, B>, op3: OperatorFunction<B, C>): C;
+  pipe<A, B, C, D>(op1: OperatorFunction<Result<T, E>, A>, op2: OperatorFunction<A, B>, op3: OperatorFunction<B, C>, op4: OperatorFunction<C, D>): D;
+  pipe<A, B, C, D, E2>(op1: OperatorFunction<Result<T, E>, A>, op2: OperatorFunction<A, B>, op3: OperatorFunction<B, C>, op4: OperatorFunction<C, D>, op5: OperatorFunction<D, E2>): E2;
+  pipe<A, B, C, D, E2, F>(op1: OperatorFunction<Result<T, E>, A>, op2: OperatorFunction<A, B>, op3: OperatorFunction<B, C>, op4: OperatorFunction<C, D>, op5: OperatorFunction<D, E2>, op6: OperatorFunction<E2, F>): F;
+  pipe<A, B, C, D, E2, F, G>(op1: OperatorFunction<Result<T, E>, A>, op2: OperatorFunction<A, B>, op3: OperatorFunction<B, C>, op4: OperatorFunction<C, D>, op5: OperatorFunction<D, E2>, op6: OperatorFunction<E2, F>, op7: OperatorFunction<F, G>): G;
+  pipe<A, B, C, D, E2, F, G, H>(op1: OperatorFunction<Result<T, E>, A>, op2: OperatorFunction<A, B>, op3: OperatorFunction<B, C>, op4: OperatorFunction<C, D>, op5: OperatorFunction<D, E2>, op6: OperatorFunction<E2, F>, op7: OperatorFunction<F, G>, op8: OperatorFunction<G, H>): H;
+  pipe<A, B, C, D, E2, F, G, H, I>(op1: OperatorFunction<Result<T, E>, A>, op2: OperatorFunction<A, B>, op3: OperatorFunction<B, C>, op4: OperatorFunction<C, D>, op5: OperatorFunction<D, E2>, op6: OperatorFunction<E2, F>, op7: OperatorFunction<F, G>, op8: OperatorFunction<G, H>, op9: OperatorFunction<H, I>): I;
+  pipe<A, B, C, D, E2, F, G, H, I>(op1: OperatorFunction<Result<T, E>, A>, op2: OperatorFunction<A, B>, op3: OperatorFunction<B, C>, op4: OperatorFunction<C, D>, op5: OperatorFunction<D, E2>, op6: OperatorFunction<E2, F>, op7: OperatorFunction<F, G>, op8: OperatorFunction<G, H>, op9: OperatorFunction<H, I>, ...operations: OperatorFunction<any, any>[]): {};
+  pipe(...fns: any[]) {
+    return pipe(...fns)(this)
   }
 
   map<A>(f: (t: T) => A): Result<A, E> {
@@ -76,6 +110,14 @@ export class Ok<T, E> {
   }
 }
 
+
+
+interface UnaryFunction<T, R> {
+  (source: T): R;
+}
+interface OperatorFunction<T, R> extends UnaryFunction<T, R> {
+}
+
 export class Err<T, E> {
   private error: E
 
@@ -89,6 +131,20 @@ export class Err<T, E> {
 
   isErr(): this is Err<T, E> {
     return !this.isOk()
+  }
+
+  pipe<A>(op1: OperatorFunction<Result<T, E>, A>): A;
+  pipe<A, B>(op1: OperatorFunction<Result<T, E>, A>, op2: OperatorFunction<A, B>): B;
+  pipe<A, B, C>(op1: OperatorFunction<Result<T, E>, A>, op2: OperatorFunction<A, B>, op3: OperatorFunction<B, C>): C;
+  pipe<A, B, C, D>(op1: OperatorFunction<Result<T, E>, A>, op2: OperatorFunction<A, B>, op3: OperatorFunction<B, C>, op4: OperatorFunction<C, D>): D;
+  pipe<A, B, C, D, E2>(op1: OperatorFunction<Result<T, E>, A>, op2: OperatorFunction<A, B>, op3: OperatorFunction<B, C>, op4: OperatorFunction<C, D>, op5: OperatorFunction<D, E2>): E2;
+  pipe<A, B, C, D, E2, F>(op1: OperatorFunction<Result<T, E>, A>, op2: OperatorFunction<A, B>, op3: OperatorFunction<B, C>, op4: OperatorFunction<C, D>, op5: OperatorFunction<D, E2>, op6: OperatorFunction<E2, F>): F;
+  pipe<A, B, C, D, E2, F, G>(op1: OperatorFunction<Result<T, E>, A>, op2: OperatorFunction<A, B>, op3: OperatorFunction<B, C>, op4: OperatorFunction<C, D>, op5: OperatorFunction<D, E2>, op6: OperatorFunction<E2, F>, op7: OperatorFunction<F, G>): G;
+  pipe<A, B, C, D, E2, F, G, H>(op1: OperatorFunction<Result<T, E>, A>, op2: OperatorFunction<A, B>, op3: OperatorFunction<B, C>, op4: OperatorFunction<C, D>, op5: OperatorFunction<D, E2>, op6: OperatorFunction<E2, F>, op7: OperatorFunction<F, G>, op8: OperatorFunction<G, H>): H;
+  pipe<A, B, C, D, E2, F, G, H, I>(op1: OperatorFunction<Result<T, E>, A>, op2: OperatorFunction<A, B>, op3: OperatorFunction<B, C>, op4: OperatorFunction<C, D>, op5: OperatorFunction<D, E2>, op6: OperatorFunction<E2, F>, op7: OperatorFunction<F, G>, op8: OperatorFunction<G, H>, op9: OperatorFunction<H, I>): I;
+  pipe<A, B, C, D, E2, F, G, H, I>(op1: OperatorFunction<Result<T, E>, A>, op2: OperatorFunction<A, B>, op3: OperatorFunction<B, C>, op4: OperatorFunction<C, D>, op5: OperatorFunction<D, E2>, op6: OperatorFunction<E2, F>, op7: OperatorFunction<F, G>, op8: OperatorFunction<G, H>, op9: OperatorFunction<H, I>, ...operations: OperatorFunction<any, any>[]): {};
+  pipe(...fns: any[]) {
+    return pipe(...fns)(this)
   }
 
   map<A>(_f: (t: T) => A): Result<A, E> {
@@ -133,4 +189,3 @@ export class Err<T, E> {
     return this.error
   }
 }
-
