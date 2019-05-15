@@ -79,11 +79,6 @@ function pipeFromArray(fns, transform) {
 }
 var Ok = /** @class */ (function () {
     function Ok(value) {
-        var _this = this;
-        // talk about match can be used to unwrap values in a typesafe way
-        this.match = function (ok, _err) {
-            return ok(_this.value);
-        };
         this.value = value;
     }
     Ok.prototype.isOk = function () {
@@ -134,6 +129,10 @@ var Ok = /** @class */ (function () {
             });
         });
     };
+    // talk about match can be used to unwrap values in a typesafe way
+    Ok.prototype.match = function (ok, _err) {
+        return ok(this.value);
+    };
     Ok.prototype.asyncMatch = function (ok, _err) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
@@ -156,10 +155,6 @@ var Ok = /** @class */ (function () {
 exports.Ok = Ok;
 var Err = /** @class */ (function () {
     function Err(error) {
-        var _this = this;
-        this.match = function (_ok, err) {
-            return err(_this.error);
-        };
         this.error = error;
     }
     Err.prototype.isOk = function () {
@@ -197,6 +192,9 @@ var Err = /** @class */ (function () {
                 return [2 /*return*/, exports.err(this.error)];
             });
         });
+    };
+    Err.prototype.match = function (_ok, err) {
+        return err(this.error);
     };
     Err.prototype.asyncMatch = function (_ok, err) {
         return __awaiter(this, void 0, void 0, function () {

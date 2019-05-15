@@ -21,7 +21,7 @@ export declare class Ok<T, E> {
     andThen<U>(f: (t: T) => Result<U, E>): Result<U, E>;
     asyncMap<U>(f: (t: T) => Promise<U>): Promise<Result<U, E>>;
     asyncAndThen<U>(f: (t: T) => Promise<Result<U, E>>): Promise<Result<U, E>>;
-    match: <U, A>(ok: (t: T) => U, _err: (e: E) => A) => U;
+    match<U, A>(ok: (t: T) => U, _err: (e: E) => A): U;
     asyncMatch<U, A>(ok: (t: T) => Promise<U>, _err: (e: E) => Promise<A>): Promise<U>;
     _unsafeUnwrap(): T;
     _unsafeUnwrapErr(): E;
@@ -51,7 +51,7 @@ export declare class Err<T, E> {
     andThen<U>(_f: (t: T) => Result<U, E>): Result<U, E>;
     asyncMap<U>(_f: (t: T) => Promise<U>): Promise<Result<U, E>>;
     asyncAndThen<U>(_f: (t: T) => Promise<Result<U, E>>): Promise<Result<U, E>>;
-    match: <U, A>(_ok: (t: T) => U, err: (e: E) => A) => A;
+    match<U, A>(_ok: (t: T) => U, err: (e: E) => A): A;
     asyncMatch<U, A>(_ok: (t: T) => Promise<U>, err: (e: E) => Promise<A>): Promise<A>;
     _unsafeUnwrap(): T;
     _unsafeUnwrapErr(): E;
