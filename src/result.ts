@@ -86,10 +86,10 @@ export class Ok<T, E> {
   }
 
   // talk about match can be used to unwrap values in a typesafe way
-  match = <U, A>(
+  match<U, A>(
     ok: (t: T) => U,
     _err: (e: E) => A
-  ): U => {
+  ): U {
     return ok(this.value)
   }
 
@@ -167,10 +167,10 @@ export class Err<T, E> {
     return err(this.error)
   }
 
-  match = <U, A>(
+  match<U, A>(
     _ok: (t: T) => U,
     err: (e: E) => A
-  ): A => {
+  ): A {
     return err(this.error)
   }
 
