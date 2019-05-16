@@ -32,11 +32,7 @@ function pipeFromArray<T, R>(fns: Array<UnaryFunction<T, R>>, transform: (prev: 
 }
 
 export class Ok<T, E> {
-  private value: T
-
-  constructor(value: T) {
-    this.value = value
-  }
+  constructor(public readonly value: T) {}
 
   isOk(): this is Ok<T, E> {
     return true
@@ -119,11 +115,7 @@ interface OperatorFunction<T, R> extends UnaryFunction<T, R> {
 }
 
 export class Err<T, E> {
-  private error: E
-
-  constructor(error: E) {
-    this.error = error
-  }
+  constructor(public readonly error: E) {}
 
   isOk(): this is Ok<T, E> {
     return false
