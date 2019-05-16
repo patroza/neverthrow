@@ -2,7 +2,7 @@ export declare type Result<T, E> = Ok<T, E> | Err<T, E>;
 export declare const ok: <T, E>(value: T) => Ok<T, E>;
 export declare const err: <T, E>(err: E) => Err<T, E>;
 export declare class Ok<T, E> {
-    private value;
+    readonly value: T;
     constructor(value: T);
     isOk(): this is Ok<T, E>;
     isErr(): this is Err<T, E>;
@@ -32,7 +32,7 @@ interface UnaryFunction<T, R> {
 interface OperatorFunction<T, R> extends UnaryFunction<T, R> {
 }
 export declare class Err<T, E> {
-    private error;
+    readonly error: E;
     constructor(error: E);
     isOk(): this is Ok<T, E>;
     isErr(): this is Err<T, E>;
