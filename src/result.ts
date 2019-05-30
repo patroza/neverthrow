@@ -61,11 +61,11 @@ export class Ok<T, E> {
   }
 
   mapErr<U>(_f: (e: E) => U): Result<T, U> {
-    return ok(this.value)
+    return this as any
   }
 
   errAndThen<U>(_f: (e: E) => Result<T, U>): Result<T, U> {
-    return ok(this.value)
+    return this as any
   }
 
   // add info on how this is really useful for converting a
@@ -82,7 +82,7 @@ export class Ok<T, E> {
   }
 
   async asyncMapErr<U>(_f: (t: E) => Promise<U>): Promise<Result<T, U>> {
-    return ok(this.value)
+    return this as any
   }
 
   async asyncAndThen<U>(f: (t: T) => Promise<Result<U, E>>): Promise<Result<U, E>> {
@@ -90,7 +90,7 @@ export class Ok<T, E> {
   }
 
   async asyncErrAndThen<U>(_f: (t: E) => Promise<Result<T, U>>): Promise<Result<T, U>> {
-    return ok(this.value)
+    return this as any
   }
 
   // talk about match can be used to unwrap values in a typesafe way
@@ -152,7 +152,7 @@ export class Err<T, E> {
   }
 
   map<A>(_f: (t: T) => A): Result<A, E> {
-    return err(this.error)
+    return this as any
   }
 
   mapErr<U>(f: (e: E) => U): Result<T, U> {
@@ -160,7 +160,7 @@ export class Err<T, E> {
   }
 
   andThen<U>(_f: (t: T) => Result<U, E>): Result<U, E> {
-    return err(this.error)
+    return this as any
   }
 
   errAndThen<U>(f: (e: E) => Result<T, U>): Result<T, U> {
@@ -168,7 +168,7 @@ export class Err<T, E> {
   }
 
   async asyncMap<U>(_f: (t: T) => Promise<U>): Promise<Result<U, E>> {
-    return err(this.error)
+    return this as any
   }
 
   async asyncMapErr<U>(f: (t: E) => Promise<U>): Promise<Result<T, U>> {
@@ -176,7 +176,7 @@ export class Err<T, E> {
   }
 
   async asyncAndThen<U>(_f: (t: T) => Promise<Result<U, E>>): Promise<Result<U, E>> {
-    return err(this.error)
+    return this as any
   }
 
   async asyncErrAndThen<U>(f: (t: E) => Promise<Result<T, U>>): Promise<Result<T, U>> {
