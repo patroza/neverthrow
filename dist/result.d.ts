@@ -18,9 +18,12 @@ export declare class Ok<T, E> {
     pipe<A, B, C, D, E2, F, G, H, I>(op1: OperatorFunction<Result<T, E>, A>, op2: OperatorFunction<A, B>, op3: OperatorFunction<B, C>, op4: OperatorFunction<C, D>, op5: OperatorFunction<D, E2>, op6: OperatorFunction<E2, F>, op7: OperatorFunction<F, G>, op8: OperatorFunction<G, H>, op9: OperatorFunction<H, I>, ...operations: OperatorFunction<any, any>[]): {};
     map<A>(f: (t: T) => A): Result<A, E>;
     mapErr<U>(_f: (e: E) => U): Result<T, U>;
+    errAndThen<U>(_f: (e: E) => Result<T, U>): Result<T, U>;
     andThen<U>(f: (t: T) => Result<U, E>): Result<U, E>;
     asyncMap<U>(f: (t: T) => Promise<U>): Promise<Result<U, E>>;
+    asyncMapErr<U>(_f: (t: E) => Promise<U>): Promise<Result<T, U>>;
     asyncAndThen<U>(f: (t: T) => Promise<Result<U, E>>): Promise<Result<U, E>>;
+    asyncErrAndThen<U>(_f: (t: E) => Promise<Result<T, U>>): Promise<Result<T, U>>;
     match<U, A>(ok: (t: T) => U, _err: (e: E) => A): U;
     asyncMatch<U, A>(ok: (t: T) => Promise<U>, _err: (e: E) => Promise<A>): Promise<U>;
     _unsafeUnwrap(): T;
@@ -49,8 +52,11 @@ export declare class Err<T, E> {
     map<A>(_f: (t: T) => A): Result<A, E>;
     mapErr<U>(f: (e: E) => U): Result<T, U>;
     andThen<U>(_f: (t: T) => Result<U, E>): Result<U, E>;
+    errAndThen<U>(f: (e: E) => Result<T, U>): Result<T, U>;
     asyncMap<U>(_f: (t: T) => Promise<U>): Promise<Result<U, E>>;
+    asyncMapErr<U>(f: (t: E) => Promise<U>): Promise<Result<T, U>>;
     asyncAndThen<U>(_f: (t: T) => Promise<Result<U, E>>): Promise<Result<U, E>>;
+    asyncErrAndThen<U>(f: (t: E) => Promise<Result<T, U>>): Promise<Result<T, U>>;
     match<U, A>(_ok: (t: T) => U, err: (e: E) => A): A;
     asyncMatch<U, A>(_ok: (t: T) => Promise<U>, err: (e: E) => Promise<A>): Promise<A>;
     _unsafeUnwrap(): T;

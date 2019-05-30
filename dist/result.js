@@ -98,7 +98,10 @@ var Ok = /** @class */ (function () {
         return exports.ok(f(this.value));
     };
     Ok.prototype.mapErr = function (_f) {
-        return exports.ok(this.value);
+        return this;
+    };
+    Ok.prototype.errAndThen = function (_f) {
+        return this;
     };
     // add info on how this is really useful for converting a
     // Result<Result<T, E2>, E1>
@@ -119,6 +122,13 @@ var Ok = /** @class */ (function () {
             });
         });
     };
+    Ok.prototype.asyncMapErr = function (_f) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, this];
+            });
+        });
+    };
     Ok.prototype.asyncAndThen = function (f) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
@@ -126,6 +136,13 @@ var Ok = /** @class */ (function () {
                     case 0: return [4 /*yield*/, f(this.value)];
                     case 1: return [2 /*return*/, _a.sent()];
                 }
+            });
+        });
+    };
+    Ok.prototype.asyncErrAndThen = function (_f) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, this];
             });
         });
     };
@@ -171,25 +188,51 @@ var Err = /** @class */ (function () {
         return pipe.apply(void 0, __spread(fns))(this);
     };
     Err.prototype.map = function (_f) {
-        return exports.err(this.error);
+        return this;
     };
     Err.prototype.mapErr = function (f) {
         return exports.err(f(this.error));
     };
     Err.prototype.andThen = function (_f) {
-        return exports.err(this.error);
+        return this;
+    };
+    Err.prototype.errAndThen = function (f) {
+        return f(this.error);
     };
     Err.prototype.asyncMap = function (_f) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
-                return [2 /*return*/, exports.err(this.error)];
+                return [2 /*return*/, this];
+            });
+        });
+    };
+    Err.prototype.asyncMapErr = function (f) {
+        return __awaiter(this, void 0, void 0, function () {
+            var _a;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        _a = exports.err;
+                        return [4 /*yield*/, f(this.error)];
+                    case 1: return [2 /*return*/, _a.apply(void 0, [_b.sent()])];
+                }
             });
         });
     };
     Err.prototype.asyncAndThen = function (_f) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
-                return [2 /*return*/, exports.err(this.error)];
+                return [2 /*return*/, this];
+            });
+        });
+    };
+    Err.prototype.asyncErrAndThen = function (f) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, f(this.error)];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
             });
         });
     };
