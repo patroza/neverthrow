@@ -1,8 +1,8 @@
 
 
 export type Result<T, E>
-= Ok<T, E>
-| Err<T, E>
+  = Ok<T, E>
+  | Err<T, E>
 
 
 
@@ -14,7 +14,7 @@ function pipe(...fns: Array<UnaryFunction<any, any>>): UnaryFunction<any, any> {
   return pipeFromArray(fns, (prev, fn) => fn(prev));
 }
 
-const noop = () => {}
+const noop = () => { }
 
 function pipeFromArray<T, R>(fns: Array<UnaryFunction<T, R>>, transform: (prev: any, fn: any) => any): UnaryFunction<T, R> {
   if (!fns) {
@@ -32,7 +32,7 @@ function pipeFromArray<T, R>(fns: Array<UnaryFunction<T, R>>, transform: (prev: 
 }
 
 export class Ok<T, E> {
-  constructor(public readonly value: T) {}
+  constructor(public readonly value: T) { }
 
   isOk(): this is Ok<T, E> {
     return true
@@ -64,6 +64,10 @@ export class Ok<T, E> {
     return ok(this.value)
   }
 
+  errAndThen<U>(_f: (e: E) => Result<T, U>): Result<T, U> {
+    return ok(this.value)
+  }
+
   // add info on how this is really useful for converting a
   // Result<Result<T, E2>, E1>
   // into a Result<T, E2>
@@ -77,8 +81,16 @@ export class Ok<T, E> {
     return ok(newInner)
   }
 
+  async asyncMapErr<U>(_f: (t: E) => Promise<U>): Promise<Result<T, U>> {
+    return ok(this.value)
+  }
+
   async asyncAndThen<U>(f: (t: T) => Promise<Result<U, E>>): Promise<Result<U, E>> {
     return await f(this.value)
+  }
+
+  async asyncErrAndThen<U>(_f: (t: E) => Promise<Result<T, U>>): Promise<Result<T, U>> {
+    return ok(this.value)
   }
 
   // talk about match can be used to unwrap values in a typesafe way
@@ -115,7 +127,7 @@ interface OperatorFunction<T, R> extends UnaryFunction<T, R> {
 }
 
 export class Err<T, E> {
-  constructor(public readonly error: E) {}
+  constructor(public readonly error: E) { }
 
   isOk(): this is Ok<T, E> {
     return false
@@ -151,13 +163,26 @@ export class Err<T, E> {
     return err(this.error)
   }
 
+  errAndThen<U>(f: (e: E) => Result<T, U>): Result<T, U> {
+    return f(this.error)
+  }
+
   async asyncMap<U>(_f: (t: T) => Promise<U>): Promise<Result<U, E>> {
     return err(this.error)
+  }
+
+  async asyncMapErr<U>(f: (t: E) => Promise<U>): Promise<Result<T, U>> {
+    return err(await f(this.error))
   }
 
   async asyncAndThen<U>(_f: (t: T) => Promise<Result<U, E>>): Promise<Result<U, E>> {
     return err(this.error)
   }
+
+  async asyncErrAndThen<U>(f: (t: E) => Promise<Result<T, U>>): Promise<Result<T, U>> {
+    return await f(this.error)
+  }
+
 
   match<U, A>(
     _ok: (t: T) => U,
